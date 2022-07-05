@@ -11,33 +11,23 @@ import br.com.alura.jdbc.modelo.Categoria;
 import br.com.alura.jdbc.modelo.Produto;
 
 public class TestaListagemDeCategorias {
-	
+
 	public static void main(String[] args) throws SQLException {
-		
-		try(Connection connection = new ConnectionFactory().recuperaConexao()){
+
+		try (Connection connection = new ConnectionFactory().recuperaConexao()) {
+
 			CategoriaDAO categoriaDao = new CategoriaDAO(connection);
-			
-			List<Categoria> listaDeCategorias = categoriaDao.listar();
+
+			List<Categoria> listaDeCategorias = categoriaDao.listarComProdutos();
 			listaDeCategorias.stream().forEach(ct -> {
 				System.out.println(ct.getNome());
-	
-				try {
-					for (Produto produto : new ProdutoDAO(connection).buscar(ct)) {
-						System.out.println(ct.getNome() + " - " + produto.getNome());
-						
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+				for (Produto produto : ct.getProdutos()) {
+					System.out.println(ct.getNome() + " - " + produto.getNome());
 				}
-			
 			});
-			
-			
-			
 		}
-		
-		
+
 //		try(Connection conn = new ConnectionFactory().recuperaConexao()){
 //			
 //			// ESSA CLASSE DEVE ME RETORNAR AS CATEGORIAS EXISTENTES;
